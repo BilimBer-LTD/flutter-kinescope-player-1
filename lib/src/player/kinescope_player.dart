@@ -176,7 +176,9 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
         #player {
             position: fixed;
             top: 0;
-            left: 20;
+            left: 0;
+            right: 0;
+            bottom: 0;
             width: 100vw;  /* Занимает всю ширину экрана */
             height: 100vh; /* Занимает всю высоту экрана */
             object-fit: cover; /* Чтобы видео не было искажено, масштабировалось */
