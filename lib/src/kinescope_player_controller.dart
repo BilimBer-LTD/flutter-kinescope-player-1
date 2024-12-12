@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ignore_for_file: member-ordering-extended
+// ignore_for_file: member-ordering-extended, avoid_positional_boolean_parameters
 import 'dart:async';
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -129,6 +129,13 @@ class KinescopePlayerController {
   void unmute() {
     webViewController.evaluateJavascript(source: 'unmute();');
   }
+
+  /// Set fullScreen state
+  // ignore: avoid_positional_boolean_parameters
+  void setFullscreen(bool value) {
+    webViewController.evaluateJavascript(source: 'setFullscreen($value);');
+  }
+
 
   /// Close [statusController]
   void dispose() {

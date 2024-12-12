@@ -127,7 +127,6 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
           disableContextMenu: true,
           supportZoom: false,
           userAgent: widget.controller.parameters.userAgent ?? getUserArgent(),
-          useHybridComposition: true,
           allowsInlineMediaPlayback: true,
           allowsBackForwardNavigationGestures: false,
         ),
@@ -137,8 +136,8 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
             action: PermissionResponseAction.GRANT,
           );
         },
-        iosOnNavigationResponse: (_, __) async {
-          return IOSNavigationResponseAction.CANCEL;
+        onNavigationResponse: (_, __) async {
+          return NavigationResponseAction.CANCEL;
         },
         shouldOverrideUrlLoading: (_, __) async => Platform.isIOS
             ? NavigationActionPolicy.ALLOW
@@ -178,6 +177,7 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
             width: 100%;
             height: 100%;
             left: 0;
+            right: 0;
             top: 0;
         }
     </style>
@@ -215,7 +215,7 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
                         url: videoUri,
                         size: { width: '100%', height: '100%' },
                         settings: {
-                          externalId: '${externalId}'
+                          externalId: '$externalId'
                         },
                         behaviour: ${UriBuilder.parametersToBehavior(widget.controller.parameters)},
                         ui: ${UriBuilder.parametersToUI(widget.controller.parameters)}
