@@ -130,11 +130,11 @@ class KinescopePlayerController {
     webViewController.evaluateJavascript(source: 'unmute();');
   }
 
-  /// Set fullScreen state
-  // ignore: avoid_positional_boolean_parameters
-  void setFullscreen(bool value) {
-    webViewController.evaluateJavascript(source: 'setFullscreen($value);');
-  }
+  // /// Set fullScreen state
+  // // ignore: avoid_positional_boolean_parameters
+  // void setFullscreen(bool value) {
+  //   webViewController.evaluateJavascript(source: 'setFullscreen($value);');
+  // }
 
 
   /// Close [statusController]

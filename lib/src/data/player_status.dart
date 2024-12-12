@@ -39,8 +39,8 @@ class KinescopePlayerStatus {
   static const KinescopePlayerStatus ended = KinescopePlayerStatus._('ended');
 
 
-  /// Denotes [KinescopePlayerStatus] when player has ended playing a video.
-  static const KinescopePlayerStatus fullscreenChanged = KinescopePlayerStatus._('FullscreenChange');
+  // /// Denotes [KinescopePlayerStatus] when player has ended playing a video.
+  // static const KinescopePlayerStatus fullscreenChanged = KinescopePlayerStatus._('FullscreenChange');
 
   /// List of available values of player status
   static Iterable<KinescopePlayerStatus> values = [
@@ -50,7 +50,7 @@ class KinescopePlayerStatus {
     KinescopePlayerStatus.pause,
     KinescopePlayerStatus.ended,
     KinescopePlayerStatus.unknown,
-    KinescopePlayerStatus.fullscreenChanged,
+    // KinescopePlayerStatus.fullscreenChanged,
   ];
 
   final String _value;
