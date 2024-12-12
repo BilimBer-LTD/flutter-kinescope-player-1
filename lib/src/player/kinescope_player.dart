@@ -128,6 +128,7 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
           supportZoom: false,
           userAgent: widget.controller.parameters.userAgent ?? getUserArgent(),
           allowsInlineMediaPlayback: true,
+          useHybridComposition: true,
           allowsBackForwardNavigationGestures: false,
         ),
         onPermissionRequest: (controller, permissionRequest) async {
@@ -136,8 +137,8 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
             action: PermissionResponseAction.GRANT,
           );
         },
-        onNavigationResponse: (_, __) async {
-          return NavigationResponseAction.CANCEL;
+       iosOnNavigationResponse: (_, __) async {
+          return IOSNavigationResponseAction.CANCEL;
         },
         shouldOverrideUrlLoading: (_, __) async => Platform.isIOS
             ? NavigationActionPolicy.ALLOW
