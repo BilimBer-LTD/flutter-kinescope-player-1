@@ -46,7 +46,11 @@ class KinescopePlayer extends StatefulWidget {
   /// by default it's 16 / 9.
   final double aspectRatio;
 
+  /// Enter Fullscreen callback
   final Function()? onFullScreen;
+
+  /// Exit Fullscreen callback
+  final Function()? onExitFullScreen;
 
   /// A widget to play Kinescope videos.
   const KinescopePlayer({
@@ -54,6 +58,7 @@ class KinescopePlayer extends StatefulWidget {
     required this.controller,
     this.aspectRatio = 16 / 9,
     this.onFullScreen,
+    this.onExitFullScreen,
   }) : super(key: key);
 
   @override
@@ -83,7 +88,9 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
     return InAppWebView(
       onEnterFullscreen: (controller) {
         widget.onFullScreen?.call();
-        debugPrint('=====================================!!!!!!!!!!!!!!!!');
+      },
+      onExitFullscreen: (controller) {
+        widget.onExitFullScreen?.call();
       },
       onWebViewCreated: (controller) {
         widget.controller.webViewController = controller;
