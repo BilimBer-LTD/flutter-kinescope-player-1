@@ -49,11 +49,12 @@ class KinescopePlayerController {
   String get videoId => _videoId;
 
   /// StreamController for timeUpdate stream.
-  final StreamController<double> timeUpdateController =
-      StreamController<double>.broadcast();
+  final StreamController<Map<String, dynamic>> timeUpdateController =
+      StreamController<Map<String, dynamic>>.broadcast();
 
   // Поток для подписки
-  Stream<double> get timeUpdateStream => timeUpdateController.stream;
+  Stream<Map<String, dynamic>> get timeUpdateStream =>
+      timeUpdateController.stream;
 
   KinescopePlayerController(
     /// The video id with which the player initializes.

@@ -127,11 +127,7 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
               callback: (args) {
                 if (args != null && args.isNotEmpty) {
                   final data = args.first;
-
-                  // Проверяем тип и преобразуем, если нужно
-                  final doubleValue =
-                      data is int ? data.toDouble() : data as double;
-                  widget.controller.timeUpdateController.add(doubleValue);
+                  widget.controller.timeUpdateController.add(data);
                 }
               },
             )
@@ -261,15 +257,9 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
                         player.on(player.Events.Waiting, function (event) { window.flutter_inappwebview.callHandler('events', 'waiting'); });
                         player.on(player.Events.Pause, function (event) { window.flutter_inappwebview.callHandler('events', 'pause'); });
                         player.on(player.Events.Ended, function (event) { window.flutter_inappwebview.callHandler('events', 'ended'); });
-                        player.on(player.Events.TimeUpdate, function (event) {
-                        // Извлекаем текущее время воспроизведения
-                        const currentTime = event.data.currentTime;
-
-                        // Выводим в консоль
-                        // console.log('Current Time: currentTime seconds', currentTime);
-
+                        player.on(player.Events.TimeUpdate, function (event) {                                            
                         // Отправляем значение времени в Flutter
-                        window.flutter_inappwebview.callHandler('timeUpdate', currentTime);
+                        window.flutter_inappwebview.callHandler('timeUpdate', event.data);
                       });                       
                     });
             }
