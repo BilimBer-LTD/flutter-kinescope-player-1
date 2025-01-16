@@ -87,10 +87,10 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
   Widget build(BuildContext context) {
     return InAppWebView(
       onEnterFullscreen: (controller) {
-        widget.onFullScreen?.call();
+        widget.onFullScreen!;
       },
       onExitFullscreen: (controller) {
-        widget.onExitFullScreen?.call();
+        widget.onExitFullScreen!;
       },
       onWebViewCreated: (controller) {
         widget.controller.webViewController = controller;
@@ -123,9 +123,13 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
           ..addJavaScriptHandler(
             handlerName: 'timeUpdate',
             callback: (args) {
-              if (args != null) {
-                final data = args.first as double;
-                widget.controller.timeUpdateController.add(data);
+              if (args != null && args.isNotEmpty) {
+                final data = args.first;
+
+                // Проверяем тип и преобразуем, если нужно
+                final doubleValue =
+                    data is int ? data.toDouble() : data as double;
+                widget.controller.timeUpdateController.add(doubleValue);
               }
             },
           )
@@ -151,6 +155,7 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
         allowsInlineMediaPlayback: true,
         useHybridComposition: true,
         allowsBackForwardNavigationGestures: false,
+        iframeAllowFullscreen: true,
       ),
       onPermissionRequest: (controller, permissionRequest) async {
         return PermissionResponse(
