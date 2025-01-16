@@ -85,96 +85,99 @@ class _KinescopePlayerState extends State<KinescopePlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return InAppWebView(
-      onEnterFullscreen: (controller) {
-        widget.onFullScreen!;
-      },
-      onExitFullscreen: (controller) {
-        widget.onExitFullScreen!;
-      },
-      onWebViewCreated: (controller) {
-        widget.controller.webViewController = controller;
+    return AspectRatio(
+      aspectRatio: widget.aspectRatio,
+      child: InAppWebView(
+        onEnterFullscreen: (controller) {
+          widget.onFullScreen!();
+        },
+        onExitFullscreen: (controller) {
+          widget.onExitFullScreen!();
+        },
+        onWebViewCreated: (controller) {
+          widget.controller.webViewController = controller;
 
-        controller
-          ..addJavaScriptHandler(
-            handlerName: 'events',
-            callback: (args) {
-              final event = (args.first as String).toLowerCase();
+          controller
+            ..addJavaScriptHandler(
+              handlerName: 'events',
+              callback: (args) {
+                final event = (args.first as String).toLowerCase();
 
-              widget.controller.statusController.add(
-                KinescopePlayerStatus.values.firstWhere(
-                  (value) => value.toString() == event,
-                  orElse: () => KinescopePlayerStatus.unknown,
-                ),
-              );
-            },
-          )
-          ..addJavaScriptHandler(
-            handlerName: 'getCurrentTimeResult',
-            callback: (args) {
-              final dynamic seconds = args.first;
-              if (seconds is num) {
-                widget.controller.getCurrentTimeCompleter?.complete(
-                  Duration(milliseconds: (seconds * 1000).ceil()),
+                widget.controller.statusController.add(
+                  KinescopePlayerStatus.values.firstWhere(
+                    (value) => value.toString() == event,
+                    orElse: () => KinescopePlayerStatus.unknown,
+                  ),
                 );
-              }
-            },
-          )
-          ..addJavaScriptHandler(
-            handlerName: 'timeUpdate',
-            callback: (args) {
-              if (args != null && args.isNotEmpty) {
-                final data = args.first;
+              },
+            )
+            ..addJavaScriptHandler(
+              handlerName: 'getCurrentTimeResult',
+              callback: (args) {
+                final dynamic seconds = args.first;
+                if (seconds is num) {
+                  widget.controller.getCurrentTimeCompleter?.complete(
+                    Duration(milliseconds: (seconds * 1000).ceil()),
+                  );
+                }
+              },
+            )
+            ..addJavaScriptHandler(
+              handlerName: 'timeUpdate',
+              callback: (args) {
+                if (args != null && args.isNotEmpty) {
+                  final data = args.first;
 
-                // Проверяем тип и преобразуем, если нужно
-                final doubleValue =
-                    data is int ? data.toDouble() : data as double;
-                widget.controller.timeUpdateController.add(doubleValue);
-              }
-            },
-          )
-          ..addJavaScriptHandler(
-            handlerName: 'getDurationResult',
-            callback: (args) {
-              final dynamic seconds = args.first;
-              if (seconds is num) {
-                widget.controller.getDurationCompleter?.complete(
-                  Duration(milliseconds: (seconds * 1000).ceil()),
-                );
-              }
-            },
+                  // Проверяем тип и преобразуем, если нужно
+                  final doubleValue =
+                      data is int ? data.toDouble() : data as double;
+                  widget.controller.timeUpdateController.add(doubleValue);
+                }
+              },
+            )
+            ..addJavaScriptHandler(
+              handlerName: 'getDurationResult',
+              callback: (args) {
+                final dynamic seconds = args.first;
+                if (seconds is num) {
+                  widget.controller.getDurationCompleter?.complete(
+                    Duration(milliseconds: (seconds * 1000).ceil()),
+                  );
+                }
+              },
+            );
+        },
+        initialSettings: InAppWebViewSettings(
+          useShouldOverrideUrlLoading: true,
+          mediaPlaybackRequiresUserGesture: false,
+          transparentBackground: true,
+          disableContextMenu: true,
+          supportZoom: false,
+          userAgent: widget.controller.parameters.userAgent ?? getUserArgent(),
+          allowsInlineMediaPlayback: true,
+          useHybridComposition: true,
+          allowsBackForwardNavigationGestures: false,
+          iframeAllowFullscreen: true,
+        ),
+        onPermissionRequest: (controller, permissionRequest) async {
+          return PermissionResponse(
+            resources: [PermissionResourceType.PROTECTED_MEDIA_ID],
+            action: PermissionResponseAction.GRANT,
           );
-      },
-      initialSettings: InAppWebViewSettings(
-        useShouldOverrideUrlLoading: true,
-        mediaPlaybackRequiresUserGesture: false,
-        transparentBackground: true,
-        disableContextMenu: true,
-        supportZoom: false,
-        userAgent: widget.controller.parameters.userAgent ?? getUserArgent(),
-        allowsInlineMediaPlayback: true,
-        useHybridComposition: true,
-        allowsBackForwardNavigationGestures: false,
-        iframeAllowFullscreen: true,
-      ),
-      onPermissionRequest: (controller, permissionRequest) async {
-        return PermissionResponse(
-          resources: [PermissionResourceType.PROTECTED_MEDIA_ID],
-          action: PermissionResponseAction.GRANT,
-        );
-      },
-      iosOnNavigationResponse: (_, __) async {
-        return IOSNavigationResponseAction.CANCEL;
-      },
-      shouldOverrideUrlLoading: (_, __) async => Platform.isIOS
-          ? NavigationActionPolicy.ALLOW
-          : NavigationActionPolicy.CANCEL,
-      onConsoleMessage: (_, message) {
-        debugPrint('js: ${message.message}');
-      },
-      initialData: InAppWebViewInitialData(
-        data: _player,
-        baseUrl: WebUri(baseUrl),
+        },
+        iosOnNavigationResponse: (_, __) async {
+          return IOSNavigationResponseAction.CANCEL;
+        },
+        shouldOverrideUrlLoading: (_, __) async => Platform.isIOS
+            ? NavigationActionPolicy.ALLOW
+            : NavigationActionPolicy.CANCEL,
+        onConsoleMessage: (_, message) {
+          debugPrint('js: ${message.message}');
+        },
+        initialData: InAppWebViewInitialData(
+          data: _player,
+          baseUrl: WebUri(baseUrl),
+        ),
       ),
     );
   }
