@@ -14,6 +14,7 @@
 
 // ignore_for_file: member-ordering-extended, avoid_positional_boolean_parameters
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_kinescope_sdk/src/data/player_parameters.dart';
@@ -47,15 +48,27 @@ class KinescopePlayerController {
   /// Currently playing video id
   String get videoId => _videoId;
 
+  /// StreamController for timeUpdate stream.
+  final StreamController<double> timeUpdateController =
+      StreamController<double>.broadcast();
+
+  // Поток для подписки
+  Stream<double> get timeUpdateStream => timeUpdateController.stream;
+
   KinescopePlayerController(
     /// The video id with which the player initializes.
     String videoId, {
     this.parameters = const PlayerParameters(),
-  }) : _videoId = videoId;
+  }) : _videoId = videoId {
+    timeUpdateStream.listen((onData) {
+      log('NEW TIME UPDATE $onData');
+    });
+  }
 
   /// Loads the video as per the [videoId] provided.
   void load(String videoId) {
     statusController.sink.add(KinescopePlayerStatus.unknown);
+
     webViewController.evaluateJavascript(
       source: 'loadVideo("${UriBuilder.buildVideoUri(videoId: videoId)}");',
     );
@@ -136,9 +149,9 @@ class KinescopePlayerController {
   //   webViewController.evaluateJavascript(source: 'setFullscreen($value);');
   // }
 
-
   /// Close [statusController]
   void dispose() {
+    timeUpdateController.close();
     statusController.close();
   }
 }
