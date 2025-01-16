@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.10
+
+- fix live seek
+
+## 0.1.9
+
+- fix ios
+
+## 0.1.8
+
+- update web html
+
+## 0.1.7
+
+- update flutter_inappwebview 6.1.5
+
 ## 0.1.6
 
 - Android PROTECTED_MEDIA_ID
